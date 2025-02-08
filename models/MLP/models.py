@@ -444,7 +444,7 @@ class SoftHebbLayer(nn.Module):
         wn_np = self.wn.cpu().numpy().flatten()
 
         # Create a folder for the plots
-        plot_folder = os.path.join(os.getcwd(), f"K_{self.K}_wn_plots")
+        plot_folder = os.path.join(os.getcwd(), f"Focus_{self.focus}_with_K_{self.K}_wn_plots")
         if not os.path.exists(plot_folder):
             os.makedirs(plot_folder)
 
@@ -673,10 +673,11 @@ def MLPBaseline_Model(hsize, lamb, lr, e, wtd, gamma, nclasses, device, o, w, ws
     return mymodel
 
 
-def NewMLPBaseline_Model(K, hsize, lamb, w_lr, b_lr, l_lr, nclasses, device):
+def NewMLPBaseline_Model(K, focus, hsize, lamb, w_lr, b_lr, l_lr, nclasses, device):
     mymodel = SoftNeuralNet(device, hsize)
     heb_layer = SoftHebbLayer(
         K,
+        focus,
         inputdim=784,
         outputdim=hsize,
         w_lr=w_lr,
@@ -688,6 +689,7 @@ def NewMLPBaseline_Model(K, hsize, lamb, w_lr, b_lr, l_lr, nclasses, device):
 
     heb_layer2 = SoftHebbLayer(
         K,
+        focus,
         hsize,
         nclasses,
         w_lr=w_lr,

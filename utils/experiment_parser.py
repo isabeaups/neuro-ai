@@ -1,5 +1,6 @@
 import argparse
 from typing import List, Optional
+from utils.experiment_constants import Focus
 
 def parse_arguments(args_list: Optional[List] = None) -> argparse.Namespace:
     """
@@ -101,6 +102,7 @@ def parse_arguments(args_list: Optional[List] = None) -> argparse.Namespace:
     parser.add_argument("--l_lr", type=float, default=0.005)
     parser.add_argument("--nclasses", type=int, default=10)
     parser.add_argument('--K', type=float, default=0.03, help="K parameter for the model")
+    parser.add_argument('--focus', type=Focus, default = Focus.NEURON, help = "Specifies Synapse or Neuron based learning.")
 
     # Parse arguments into Namespace
     args: argparse.Namespace = parser.parse_args() if args_list == None else parser.parse_args(args_list)
