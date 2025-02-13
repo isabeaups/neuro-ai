@@ -276,7 +276,7 @@ class SoftNeuralNet(nn.Module):
 class SoftHebbLayer(nn.Module):
     def __init__(
         self,
-        K,
+        K: float,
         focus: Focus,
         inputdim: int,
         outputdim: int,
@@ -676,8 +676,8 @@ def MLPBaseline_Model(hsize, lamb, lr, e, wtd, gamma, nclasses, device, o, w, ws
 def NewMLPBaseline_Model(K, focus, hsize, lamb, w_lr, b_lr, l_lr, nclasses, device):
     mymodel = SoftNeuralNet(device, hsize)
     heb_layer = SoftHebbLayer(
-        K,
-        focus,
+        K=K,
+        focus=focus,
         inputdim=784,
         outputdim=hsize,
         w_lr=w_lr,
