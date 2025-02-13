@@ -44,7 +44,7 @@ class ClassificationLayer(OutputLayer):
                  learning_rule: LearningRules = LearningRules.HEBBIAN_LEARNING_RULE,
                  weight_growth: WeightGrowth = WeightGrowth.LINEAR,
                  bias_update: BiasUpdate = BiasUpdate.NO_BIAS,
-                 focus: Focus = Focus.SYNASPSE,
+                 focus: Focus = Focus.SYNAPSE,
                  activation: ActivationMethods = ActivationMethods.BASIC
                  ) -> None:
         """
@@ -354,7 +354,7 @@ class ClassificationLayer(OutputLayer):
         current_weights: torch.Tensor = self.fc.weight.clone().detach().to(self.device)
         derivative: torch.Tensor
         
-        if self.focus == Focus.SYNASPSE:
+        if self.focus == Focus.SYNAPSE:
             derivative = (1 / self.sigmoid_k) * (self.sigmoid_k - current_weights) * current_weights
         elif self.focus == Focus.NEURON:
             norm: torch.Tensor = self.get_norm(self.fc.weight)
@@ -380,7 +380,7 @@ class ClassificationLayer(OutputLayer):
         current_weights: torch.Tensor = self.fc.weight.clone().detach().to(self.device)
         derivative: torch.Tensor
         
-        if self.focus == Focus.SYNASPSE:
+        if self.focus == Focus.SYNAPSE:
             derivative = torch.abs(current_weights)
         elif self.focus == Focus.NEURON:
             norm: torch.Tensor = self.get_norm(self.fc.weight)
