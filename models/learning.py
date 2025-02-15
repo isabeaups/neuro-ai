@@ -151,10 +151,10 @@ def update_softhebb_w(
         )  # average the delta weights over the batch dim
     elif focus == Focus.SYNAPSE:
         batch_dim, out_dim = y.shape
+        print("Shape of y:", y.shape)
         w = torch.abs(weights) #Element-wise absoluate value for |Wij|
         weight_norms = torch.norm(weights, dim=1, keepdim=True)
         wn = weight_norms.unsqueeze(0) #Keeping this to make return consistent
-        ##Assuming that calculations are consitent across the element-wise changes given.
         if weight_growth == WeightGrowth.Default:
             factor = 1 / (w + 1e-9)
         elif weight_growth == WeightGrowth.Linear:

@@ -442,6 +442,8 @@ class SoftHebbLayer(nn.Module):
 
         # Convert self.wn to a numpy array
         wn_np = self.wn.cpu().numpy().flatten()
+        #Remove nan-values (matplot plt.() can't deal with Nan indexes)
+        wn_np = wn_np[~np.isnan(wn_np)]
 
         # Create a folder for the plots
         plot_folder = os.path.join(os.getcwd(), f"Focus_{self.focus}_with_K_{self.K}_wn_plots")
