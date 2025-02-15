@@ -60,7 +60,7 @@ class HebbianLayer(HiddenLayer):
                  learning_rule: LearningRules = LearningRules.SANGER_LEARNING_RULE,
                  weight_growth: WeightGrowth = WeightGrowth.LINEAR,
                  bias_update: BiasUpdate = BiasUpdate.NO_BIAS,
-                 focus: Focus = Focus.SYNASPSE,
+                 focus: Focus = Focus.SYNAPSE,
                  activation: ActivationMethods = ActivationMethods.BASIC,
                  rho: float = 0.01
                  ) -> None:
@@ -186,7 +186,7 @@ class HebbianLayer(HiddenLayer):
             function_derivative = self._linear_function().to(self.device)
         elif self.weight_growth == WeightGrowth.SIGMOID:
             function_derivative = self._sigmoid_function().to(self.device)
-        elif (self.weight_growth == WeightGrowth.EXPONENTIAL) and (self.focus == Focus.SYNASPSE):
+        elif (self.weight_growth == WeightGrowth.EXPONENTIAL) and (self.focus == Focus.SYNAPSE):
             function_derivative = self._exponential_function().to(self.device)
         elif (self.weight_growth == WeightGrowth.EXPONENTIAL) and (self.focus == Focus.NEURON):
             function_derivative = self._linear_function().to(self.device)
@@ -588,7 +588,7 @@ class HebbianLayer(HiddenLayer):
         current_weights: torch.Tensor = self.fc.weight.clone().detach().to(self.device)
         derivative: torch.Tensor
         
-        if self.focus == Focus.SYNASPSE:
+        if self.focus == Focus.SYNAPSE:
             derivative = (1 / self.sigmoid_k) * (self.sigmoid_k - torch.min(torch.ones_like(current_weights), torch.relu(current_weights)) ) * torch.abs(current_weights)
         elif self.focus == Focus.NEURON:
             norm: torch.Tensor = self.get_norm(self.fc.weight)
@@ -614,7 +614,7 @@ class HebbianLayer(HiddenLayer):
         current_weights: torch.Tensor = self.fc.weight.clone().detach().to(self.device)
         derivative: torch.Tensor
         
-        if self.focus == Focus.SYNASPSE:
+        if self.focus == Focus.SYNAPSE:
             derivative = torch.abs(current_weights)
         elif self.focus == Focus.NEURON:
             norm: torch.Tensor = self.get_norm(self.fc.weight)
