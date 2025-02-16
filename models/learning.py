@@ -122,13 +122,13 @@ def update_softhebb_w(
         batch_dim, out_dim = y.shape
         wn = weight_norms.unsqueeze(0)
         if weight_growth == WeightGrowth.Default:
-            factor = 1 / (wn + 1e-9)
+            factor = 1 / (wn / K + 1e-9)
         elif weight_growth == WeightGrowth.Linear:
             factor = 1
         elif weight_growth == WeightGrowth.Sigmoidal:
             factor = wn / K * (1 - wn / K)
         elif weight_growth == WeightGrowth.Exponential:
-            factor = wn
+            factor = wn / K
         else:
             raise NotImplementedError(f"Weight growth {weight_growth}, invalid.")
         if inhibition == Inhibition.RePU:
@@ -156,13 +156,13 @@ def update_softhebb_w(
         weight_norms = torch.norm(weights, dim=1, keepdim=True)
         wn = weight_norms.unsqueeze(0) #Keeping this to make return consistent
         if weight_growth == WeightGrowth.Default:
-            factor = 1 / (w + 1e-9)
+            factor = 1 / (w / K + 1e-9)
         elif weight_growth == WeightGrowth.Linear:
             factor = torch.ones_like(weights)
         elif weight_growth == WeightGrowth.Sigmoidal:
             factor = w / K * (1 - w / K)
         elif weight_growth == WeightGrowth.Exponential:
-            factor = w
+            factor = w / K
         else:
             raise NotImplementedError(f"Weight growth {weight_growth}, invalid.")
 
