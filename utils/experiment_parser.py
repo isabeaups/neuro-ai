@@ -2,6 +2,7 @@ import argparse
 from typing import List, Optional
 
 from utils.experiment_constants import Focus, WeightGrowth
+from models.hyperparams import WeightGrowth
 
 
 def parse_arguments(args_list: Optional[List] = None) -> argparse.Namespace:
