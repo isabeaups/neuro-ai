@@ -126,7 +126,10 @@ def parse_arguments(args_list: Optional[List] = None) -> argparse.Namespace:
     parser.add_argument("--l_lr", type=float, default=0.005)
     parser.add_argument("--nclasses", type=int, default=10)
     parser.add_argument(
-        "--K", type=float, default=0.03, help="K parameter for the model"
+        "--k_first", type=float, default=0.03, help="K parameter for the hidden layer."
+    )
+    parser.add_argument(
+        "--k_second", type=float, default=0.03, help="K parameter for the classification layer."
     )
     parser.add_argument(
         "--focus",

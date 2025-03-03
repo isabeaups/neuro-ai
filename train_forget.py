@@ -55,7 +55,8 @@ def train_and_eval(args: Tuple) -> List[List[float]]:
     # sys.stdout.flush()
     # return
     model: Network = NewMLPBaseline_Model(
-        params.K,
+        params.k_first,
+        params.k_second,
         params.focus,
         params.hsize,
         params.lamb,

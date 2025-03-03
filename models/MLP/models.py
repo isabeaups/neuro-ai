@@ -675,10 +675,10 @@ def MLPBaseline_Model(hsize, lamb, lr, e, wtd, gamma, nclasses, device, o, w, ws
     return mymodel
 
 
-def NewMLPBaseline_Model(K, focus, hsize, lamb, w_lr, b_lr, l_lr, nclasses, device, weight_growth):
+def NewMLPBaseline_Model(k_first, k_second, focus, hsize, lamb, w_lr, b_lr, l_lr, nclasses, device, weight_growth):
     mymodel = SoftNeuralNet(device, hsize)
     heb_layer = SoftHebbLayer(
-        K=K,
+        K=k_first,
         focus=focus,
         inputdim=784,
         outputdim=hsize,
@@ -691,7 +691,7 @@ def NewMLPBaseline_Model(K, focus, hsize, lamb, w_lr, b_lr, l_lr, nclasses, devi
     )
 
     heb_layer2 = SoftHebbLayer(
-        K,
+        k_second,
         focus,
         hsize,
         nclasses,
