@@ -20,6 +20,7 @@ results/
 #Virtual env
 neuroai_venv/
 virtual_venv/
+env/
 
 # tmp folder
 tmp/
