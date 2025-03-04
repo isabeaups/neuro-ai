@@ -29,7 +29,8 @@ parameter_pairs = [(0.5, 1, 0.003)]
 # Define other parameters
 other_parameters = [("sanger", "sigmoid", "sigmoid", "neuron", "RELU", "neuron")]
 K_values = [0.03, 0.04, 0.05, 0.06]
-K = K_values[0]
+K_1 = K_values[0]
+K_2 = K_values[1]
 focuses = ['SYNAPSE', 'NEURON']
 growth_paramaters = ["LINEAR", "SIGMOID", "EXPONENTIAL"]
 # Set the number of concurrent processes
@@ -57,7 +58,7 @@ for focus in focuses:
                     gpu_id = next(gpu_cycle)
 
                     # Construct experiment name
-                    exp_name = f"focus:{focus}_K{K}_SOFTHEBB_BATCH{batch_size}_HSIZE{hsize}_{growth.upper()}_{clas_growth.upper()}"
+                    exp_name = f"focus:{focus}_k_first{K_1}_k_second{K_2}_SOFTHEBB_BATCH{batch_size}_HSIZE{hsize}_{growth.upper()}_{clas_growth.upper()}"
 
                     # Construct the command arguments
                     arguments = [
@@ -106,7 +107,8 @@ for focus in focuses:
                         f"--device=cuda:{gpu_id}",
                         "--local_machine=True",
                         "--experiment_type=forget",
-                        f"--K={K}",
+                        f"--k_first={K_1}",
+                        f"--k_second={K_2}",
                         f"--focus={focus}",
                         f"--weight_growth={growth}"
                     ]

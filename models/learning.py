@@ -1,12 +1,12 @@
 import sys
 
+import numpy as np
 import scipy
 import torch
 import torch.nn as nn
 
 from models.hyperparams import Inhibition
-from utils.experiment_constants import WeightGrowth
-from utils.experiment_constants import Focus
+from utils.experiment_constants import Focus, WeightGrowth
 
 """
 Learning rules for MLP and CNN models
@@ -122,6 +122,9 @@ def update_softhebb_w(
         sys.stdout.flush()
         batch_dim, out_dim = y.shape
         wn = weight_norms.unsqueeze(0)
+        K_optimal = get_optimal_k(weights)  # Based on median histogram of weights
+        if K_optimal is not None and K_optimal != 0:
+            K = K_optimal
         if weight_growth == WeightGrowth.DEFAULT:
             factor = 1 / (wn / K + 1e-9)
         elif weight_growth == WeightGrowth.LINEAR:
@@ -153,9 +156,12 @@ def update_softhebb_w(
     elif focus == Focus.SYNAPSE:
         batch_dim, out_dim = y.shape
         print("Shape of y:", y.shape)
-        w = torch.abs(weights) #Element-wise absoluate value for |Wij|
+        w = torch.abs(weights)  # Element-wise absoluate value for |Wij|
         weight_norms = torch.norm(weights, dim=1, keepdim=True)
-        wn = weight_norms.unsqueeze(0) #Keeping this to make return consistent
+        wn = weight_norms.unsqueeze(0)  # Keeping this to make return consistent
+        K_optimal = get_optimal_k(weights)  # Based on median histogram of weights
+        if K_optimal is not None and K_optimal != 0:
+            K = K_optimal
         if weight_growth == WeightGrowth.DEFAULT:
             factor = 1 / (w / K + 1e-9)
         elif weight_growth == WeightGrowth.LINEAR:
@@ -231,3 +237,15 @@ def update_softhebb_lamb(
         delta_l = torch.sum(y * v, dim=1) - k
     delta_l = torch.mean(delta_l)  # mean over batch dim
     return delta_l
+
+
+def get_optimal_k(weights, bins=10):
+    weights = np.array(weights)
+    normalized_weights = (weights - weights.min()) / (weights.max() - weights.min())
+
+    hist, bin_edges = np.histogram(normalized_weights, bins=bins)
+
+    cumulative_counts = np.cumsum(hist)
+    median_index = np.searchsorted(cumulative_counts, cumulative_counts[-1] / 2)
+
+    return (bin_edges[median_index] + bin_edges[median_index + 1]) / 2
