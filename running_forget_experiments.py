@@ -30,7 +30,8 @@ parameter_pairs = [(0.5, 1, 0.003)]
 other_parameters = [("sanger", "sigmoid", "sigmoid", "neuron", "RELU", "neuron")]
 K_values = [0.03, 0.04, 0.05, 0.06]
 K = K_values[0]
-focuses = ['SYNAPSE', 'NEURON']
+focuses = ['NEURON']
+
 growth_paramaters = ["LINEAR", "SIGMOID", "EXPONENTIAL"]
 # Set the number of concurrent processes
 max_concurrent_processes = len(available_gpus)
