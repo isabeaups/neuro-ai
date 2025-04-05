@@ -28,7 +28,7 @@ parameter_pairs = [(0.5, 1, 0.003)]
 
 # Define other parameters
 other_parameters = [("sanger", "sigmoid", "sigmoid", "neuron", "RELU", "neuron")]
-K_values = [0.03, 0.04, 0.05, 0.06]
+K_values = [0.03, 1, 100, 1000]
 K = K_values[0]
 focuses = ["NEURON"]
 
