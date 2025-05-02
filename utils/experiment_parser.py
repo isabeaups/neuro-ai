@@ -1,7 +1,7 @@
 import argparse
 from typing import List, Optional
 
-from utils.experiment_constants import Focus
+from utils.experiment_constants import Focus, WeightGrowth
 
 
 def parse_arguments(args_list: Optional[List] = None) -> argparse.Namespace:
@@ -133,6 +133,12 @@ def parse_arguments(args_list: Optional[List] = None) -> argparse.Namespace:
         type=Focus,
         choices=list((Focus)),
         help="Specifies Synapse or Neuron based learning.",
+    )
+    parser.add_argument(
+        "--weight_growth",
+        type=WeightGrowth,
+        choices=list((WeightGrowth)),
+        help="Specifies the weight growth of each softhebb layer.",
     )
 
     # Parse arguments into Namespace

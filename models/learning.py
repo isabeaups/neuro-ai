@@ -4,7 +4,8 @@ import scipy
 import torch
 import torch.nn as nn
 
-from models.hyperparams import Inhibition, WeightGrowth
+from models.hyperparams import Inhibition
+from utils.experiment_constants import WeightGrowth
 from utils.experiment_constants import Focus
 
 """
@@ -112,7 +113,7 @@ def update_softhebb_w(
     u=None,
     target=None,
     supervised=False,
-    weight_growth: WeightGrowth = WeightGrowth.Default,
+    weight_growth: WeightGrowth = WeightGrowth.DEFAULT,
 ):
     if focus == Focus.NEURON:
         weight_norms = torch.norm(weights, dim=1, keepdim=True)
@@ -121,22 +122,21 @@ def update_softhebb_w(
         sys.stdout.flush()
         batch_dim, out_dim = y.shape
         wn = weight_norms.unsqueeze(0)
-        if weight_growth == WeightGrowth.Default:
-            factor = 1 / (wn + 1e-9)
-        elif weight_growth == WeightGrowth.Linear:
-            factor = 1
-        elif weight_growth == WeightGrowth.Sigmoidal:
-            factor = wn / K * (1 - wn / K)
-        elif weight_growth == WeightGrowth.Exponential:
-            factor = wn
+        factor = 1 / (wn + 1e-9)
+        if weight_growth == WeightGrowth.LINEAR:
+            factor *= 1
+        elif weight_growth == WeightGrowth.SIGMOID:
+            factor *= wn / K * (1 - wn / K)
+        elif weight_growth == WeightGrowth.EXPONENTIAL:
+            factor *= wn / K
         else:
             raise NotImplementedError(f"Weight growth {weight_growth}, invalid.")
         if inhibition == Inhibition.RePU:
-            indicator = (u > 0).float()
+            indicator = (a > 0).float()
             factor = (
                 factor
                 * indicator.reshape(batch_dim, out_dim, 1)
-                / (u.reshape(batch_dim, out_dim, 1) + 1e-9)
+                / (a.reshape(batch_dim, out_dim, 1) + 1e-9)
             )
         if supervised:
             y_part = (target - y).reshape(batch_dim, out_dim, 1)
@@ -155,23 +155,22 @@ def update_softhebb_w(
         w = torch.abs(weights) #Element-wise absoluate value for |Wij|
         weight_norms = torch.norm(weights, dim=1, keepdim=True)
         wn = weight_norms.unsqueeze(0) #Keeping this to make return consistent
-        if weight_growth == WeightGrowth.Default:
-            factor = 1 / (w + 1e-9)
-        elif weight_growth == WeightGrowth.Linear:
-            factor = torch.ones_like(weights)
-        elif weight_growth == WeightGrowth.Sigmoidal:
-            factor = w / K * (1 - w / K)
-        elif weight_growth == WeightGrowth.Exponential:
-            factor = w
+        factor = 1 / (w / K + 1e-9)
+        if weight_growth == WeightGrowth.LINEAR:
+            factor *= torch.ones_like(weights)
+        elif weight_growth == WeightGrowth.SIGMOID:
+            factor *= w / K * (1 - w / K)
+        elif weight_growth == WeightGrowth.EXPONENTIAL:
+            factor *= w / K
         else:
             raise NotImplementedError(f"Weight growth {weight_growth}, invalid.")
 
         if inhibition == Inhibition.RePU:
-            indicator = (u > 0).float()
+            indicator = (a > 0).float()
             factor = (
                 factor
                 * indicator.reshape(batch_dim, out_dim, 1)
-                / (u.reshape(batch_dim, out_dim, 1) + 1e-9)
+                / (a.reshape(batch_dim, out_dim, 1) + 1e-9)
             )
         if supervised:
             y_part = (target - y).reshape(batch_dim, out_dim, 1)

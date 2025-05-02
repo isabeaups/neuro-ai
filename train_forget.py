@@ -64,6 +64,7 @@ def train_and_eval(args: Tuple) -> List[List[float]]:
         params.l_lr,
         params.nclasses,
         params.device,
+        params.weight_growth,
     )
     experiment: Experiment = ForgetExperiment(
         model,

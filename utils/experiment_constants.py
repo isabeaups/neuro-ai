@@ -35,6 +35,7 @@ class WeightGrowth(Enum):
     Defines function types constants
     @instance attr.
     """
+    DEFAULT = 'DEFAULT'
     LINEAR = 'LINEAR'
     SIGMOID = 'SIGMOID'
     EXPONENTIAL = 'EXPONENTIAL'
